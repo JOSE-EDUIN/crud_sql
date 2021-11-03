@@ -48,6 +48,7 @@ class Ventana(Frame):
             self.grid.insert("",END,text=row[0],values=(row[1],row[2],row[3]))
         if len(self.grid.get_children())>0:
             self.grid.selection_set(self.grid.get_children()[0])
+
     def fNuevo(self):
         self.habilitarCajas("normal")
         self.habilitarBtns("disabled")
@@ -58,7 +59,9 @@ class Ventana(Frame):
         
         
 
-    
+    def fReset(self):
+        self.limpiaGrid()
+        self.llenarDatos()
    
     
     def fActualizar(self):
@@ -106,7 +109,6 @@ class Ventana(Frame):
                   messagebox.showwarning("Eliminar",'no fue posible eliminar')
               
           
-      
 
     def fGuardar(self):
      if self.id==-1:
@@ -126,6 +128,20 @@ class Ventana(Frame):
     
       
 
+
+    #Buscar empleados con sueldo maximo
+    def fBuscar(self):
+      self.limpiaGrid()
+      datos=self.estudiantes.buscar_sueldomax()
+      for row in datos:
+         self.grid.insert("",END,text=row[0],values=(row[1],row[2],row[3]))
+      if len(self.grid.get_children())>0:
+         self.grid.selection_set(self.grid.get_children()[0])
+
+    
+
+
+
     def fCancelar(self):
         r=messagebox.askquestion("Cancelar",'desea cancelar la operacion actual?')
         if r==messagebox.YES:
@@ -140,21 +156,26 @@ class Ventana(Frame):
 
     def create_widgets(self):
         frame1=Frame(self, bg="#8c004b")
-        frame1.place(x=0, y=0,width=93,height=259)
+        frame1.place(x=0, y=0,width=100,height=259)
 
         self.btnNuevo=Button(frame1,text="agregar",command=self.fNuevo, bg="blue", fg="white")
         self.btnNuevo.place(x=5,y=50,width=80,height=30)
-
-        
 
         self.btnActualizar=Button(frame1,text="actualizar",command=self.fActualizar, bg="blue", fg="white")
         self.btnActualizar.place(x=5,y=90,width=80,height=30)
 
         self.btnEliminar=Button(frame1,text="eliminar",command=self.fEliminar, bg="blue", fg="white")
         self.btnEliminar.place(x=5,y=130,width=80,height=30)
+        
+        #Nuevo btn
+        self.btnEliminar=Button(frame1,text="Sueldos Max.",command=self.fBuscar, bg="blue", fg="white")
+        self.btnEliminar.place(x=5,y=170,width=80,height=30)
+        
+        self.btnEliminar=Button(frame1,text="Reset.",command=self.fReset, bg="brown", fg="white")
+        self.btnEliminar.place(x=5,y=210,width=80,height=30)
 
         frame2=Frame(self, bg="#0000ff")
-        frame2.place(x=95, y=0,width=150,height=259)
+        frame2.place(x=105, y=0,width=250,height=259)
        
 
         lbl2=Label(frame2,text="Nombre: ")
@@ -178,12 +199,13 @@ class Ventana(Frame):
         self.btnCancelar=Button(frame2,text="Cancelar",command=self.fCancelar, bg="black", fg="white")
         self.btnCancelar.place(x=80,y=210,width=60,height=30)
 
+
         frame3=Frame(self, bg="yellow")
-        frame3.place(x=247,y=0,width=420,height=259)
+        frame3.place(x=300,y=0,width=480,height=259)
 
         self.grid=ttk.Treeview(frame3,columns=("col1","col2","col3"))
 
-        self.grid.column("#0",width=60)
+        self.grid.column("#0",width=40)
 
         self.grid.column("col1",width=100, anchor=CENTER)
         self.grid.column("col2",width=120, anchor=CENTER)

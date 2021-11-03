@@ -22,13 +22,15 @@ class Estudiantesss:
         cur.close()
         return datos
 
-    def buscar_estudiante(self, Id):
+
+    def buscar_sueldomax(self):
         cur = self.cnn.cursor()
-        sql = "SELECT * FROM estudiantes WHERE Id = {}".format(Id)
-        cur.execute(sql)
-        datos = cur.fetchone()
+        cur.execute("SELECT * FROM estudiantes WHERE sueldo = (SELECT MAX(SUELDO) FROM estudiantes)")
+        datos = cur.fetchall()
         cur.close()
         return datos
+
+
 
     def inserta_estudiante(self, nombre, edad, sueldo):
         cur = self.cnn.cursor()
